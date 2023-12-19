@@ -161,5 +161,7 @@ cython_debug/
 /.idea/
 /_hiddenValues/
 /_test/
-/charts/
+Botpic.png
+charts/
 /Dockerfile
+database.py
