@@ -32,7 +32,7 @@ async def morning(application):
 
 async def chart_analyze(ticker, context: ContextTypes.DEFAULT_TYPE):
     ticker = ticker.upper()
-    data = selection.selection_data(yf.Ticker(ticker).history(period='100d', interval='1d'))
+    data = selection.select_data(yf.Ticker(ticker).history(period='100d', interval='1d'))
     curr = data.index[-1].strftime("%Y-%m-%d")
 
     # Bollinger Bands Chart
@@ -74,7 +74,7 @@ async def chart_analyze(ticker, context: ContextTypes.DEFAULT_TYPE):
     fig_vol.add_trace(go.Scatter(x=data.index, y=data['Volume'], mode='lines', name='Volume', line=dict(color='black')))
     fig_vol.update_layout(title=f'{ticker} Volume', xaxis_title='Date', yaxis_title='Volume', showlegend=True)
 
-    if selection.selection_upper(data):
+    if selection.select_upper(data):
         logger.info(f"{curr}: {ticker} Upper")
         # Convert to png
         fig_bb.write_image(f"./charts/{curr}:{ticker}:Upper.png", format="png", engine="kaleido", width=1920,
@@ -107,7 +107,7 @@ async def chart_analyze(ticker, context: ContextTypes.DEFAULT_TYPE):
         os.remove(f"./charts/{curr}:{ticker}:ADX.png")
         os.remove(f"./charts/{curr}:{ticker}:Volume.png")
 
-    elif selection.selection_lower(data):
+    elif selection.select_lower(data):
         logger.info(f"{curr}: {ticker} Lower")
         # Convert to png
         fig_bb.write_image(f"./charts/{curr}:{ticker}:Lower.png", format="png", engine="kaleido", width=1920,
