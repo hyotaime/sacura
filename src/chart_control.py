@@ -12,7 +12,6 @@ async def night(application):
     logger.info("chk NASDAQ")
     for ticker in database.get_nasdaq():
         ticker = ticker['ticker']
-        selection.selection(ticker)
         await chart_analyze(ticker, application)
     logger.info("chk NASDAQ end")
 
