@@ -20,10 +20,10 @@ async def add(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="Please enter available ticker."
         )
     else:
-        await process_add(ticker)
+        message = await process_add(ticker)
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"{ticker}: Add success."
+            text=message
         )
 
 
@@ -41,18 +41,19 @@ async def a(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="Please enter available ticker."
         )
     else:
-        await process_add(ticker)
+        message = await process_add(ticker)
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"{ticker}: Add success."
+            text=message
         )
 
 
 async def process_add(ticker: str):
-    match ticker.split('.')[-1]:
-        case 'KS':
-            database.set_kospi(ticker)
-        case 'T':
-            database.set_nikkei(ticker)
-        case _:
-            database.set_nasdaq(ticker)
+    if '.' not in ticker:
+        return database.set_nasdaq(ticker)
+    else:
+        match ticker.split('.')[-1]:
+            case 'KS':
+                return database.set_kospi(ticker)
+            case 'T':
+                return database.set_nikkei(ticker)

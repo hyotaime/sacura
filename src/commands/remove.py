@@ -49,10 +49,11 @@ async def r(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def process_remove(ticker: str):
-    match ticker.split('.')[-1]:
-        case 'KS':
-            database.remove_kospi(ticker)
-        case 'T':
-            database.remove_nikkei(ticker)
-        case _:
-            database.remove_nasdaq(ticker)
+    if '.' not in ticker:
+        database.remove_nasdaq(ticker)
+    else:
+        match ticker.split('.')[-1]:
+            case 'KS':
+                database.remove_kospi(ticker)
+            case 'T':
+                database.remove_nikkei(ticker)
