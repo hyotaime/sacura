@@ -24,7 +24,7 @@ if __name__ == '__main__':
         pass
     scheduler = AsyncIOScheduler()
     scheduler.start()
-    scheduler.add_job(chart_control.night, 'cron', day_of_week='mon-fri', hour=22, minute=30, args=(application, ), id='night')
+    scheduler.add_job(chart_control.night, 'cron', day_of_week='mon-fri', hour=22, minute=0, args=(application, ), id='night')
     scheduler.add_job(chart_control.morning, 'cron', day_of_week='mon-fri', hour=8, minute=30, args=(application, ), id='morning')
 
     start_handler = CommandHandler('start', start.start)
