@@ -1,3 +1,4 @@
+from telegram import InputMediaPhoto
 from telegram.ext import ContextTypes
 import yfinance as yf
 import plotly.graph_objs as go
@@ -22,6 +23,11 @@ async def morning(application):
         ticker = ticker['ticker']
         await chart_analyze(ticker, application)
     logger.info("chk KOSPI end")
+    logger.info("chk KOSDAQ")
+    for ticker in database.get_kosdaq():
+        ticker = ticker['ticker']
+        await chart_analyze(ticker, application)
+    logger.info("chk KOSDAQ end")
     logger.info("chk NIKKEI")
     for ticker in database.get_nikkei():
         ticker = ticker['ticker']
@@ -85,21 +91,19 @@ async def chart_analyze(ticker, context: ContextTypes.DEFAULT_TYPE):
         # Send to telegram
         load_dotenv()
         chat_id = os.getenv('CHAT_ID')
+        info = database.get_info(ticker)
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"{curr}: {ticker} Upper"
+            text=f"{curr}: Upper\n"
+                 f"{info} ({ticker})"
         )
-        await context.bot.send_photo(
+        await context.bot.send_media_group(
             chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:Upper.png", 'rb')
-        )
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:ADX.png", 'rb')
-        )
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:Volume.png", 'rb')
+            media=[
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:Upper.png", 'rb'), caption=f"{curr}: {ticker} Upper\n"),
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:ADX.png", 'rb'), caption=f"{curr}: {ticker} ADX\n"),
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:Volume.png", 'rb'),
+                                caption=f"{curr}: {ticker} Volume\n")],
         )
         # Remove png
         os.remove(f"./charts/{curr}:{ticker}:Upper.png")
@@ -118,21 +122,19 @@ async def chart_analyze(ticker, context: ContextTypes.DEFAULT_TYPE):
         # Send to telegram
         load_dotenv()
         chat_id = os.getenv('CHAT_ID')
+        info = database.get_info(ticker)
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"{curr}: {ticker} Lower"
+            text=f"{curr}: Lower\n"
+                 f"{info} ({ticker})"
         )
-        await context.bot.send_photo(
+        await context.bot.send_media_group(
             chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:Lower.png", 'rb')
-        )
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:ADX.png", 'rb')
-        )
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=open(f"./charts/{curr}:{ticker}:Volume.png", 'rb')
+            media=[
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:Lower.png", 'rb'), caption=f"{curr}: {ticker} Lower\n"),
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:ADX.png", 'rb'), caption=f"{curr}: {ticker} ADX\n"),
+                InputMediaPhoto(open(f"./charts/{curr}:{ticker}:Volume.png", 'rb'),
+                                caption=f"{curr}: {ticker} Volume\n")],
         )
         # Remove png
         os.remove(f"./charts/{curr}:{ticker}:Lower.png")
