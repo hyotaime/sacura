@@ -55,5 +55,7 @@ async def process_add(ticker: str):
         match ticker.split('.')[-1]:
             case 'KS':
                 return database.set_kospi(ticker)
+            case 'KQ':
+                return database.set_kosdaq(ticker)
             case 'T':
                 return database.set_nikkei(ticker)

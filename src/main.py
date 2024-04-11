@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from src import log, chart_control, database
-from commands import start, add, remove
+from commands import start, add, remove, now, chart
 
 load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
@@ -39,5 +39,13 @@ if __name__ == '__main__':
     application.add_handler(remove_handler)
     r_handler = CommandHandler('r', remove.r)
     application.add_handler(r_handler)
+
+    now_handler = CommandHandler('now', now.now)
+    application.add_handler(now_handler)
+    n_handler = CommandHandler('n', now.n)
+    application.add_handler(n_handler)
+
+    chart_handler = CommandHandler('chart', chart.chart)
+    application.add_handler(chart_handler)
 
     application.run_polling()
